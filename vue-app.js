@@ -50,7 +50,7 @@ var app = new Vue({
 	mounted (){
 		axios
 			//.get('https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json')
-			.get('http://api.football-data.org/v1/competitions/467/fixtures')
+			.get('https://api.football-data.org/v1/competitions/467/fixtures')
 			.then(response=>(this.buildData(response)))
 	},
 	methods: {
