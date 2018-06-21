@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html style="height: fit-content;">
+<head>
+	<title>Football Prediction</title>
+	
+	
+	<script src="jquery-3.1.1.min.js"></script>
+	<!-- <script src="vue.min.js"></script> -->
+	<link rel="stylesheet" type="text/css" href="semantic/semantic.min.css">
+	<script src="semantic/semantic.min.js"></script>
+	<style>
+		body { width: auto; height: auto; overflow: scroll; }
+	</style>
+</head>
+<body>
+		
+  <div id="app">
+	  <div class="ui two columns stackable grid" style="margin: 10px 10px 0px 10px;padding: 5px;">
+		<div class="column ui form" >
+			<div class="ui segment" style="padding: 22px;">
+				<div class="ui three columns grid">
+					<div class="three column row">
+						<div class="middle aligned column">
+							<label><b>Code:</b></label>
+						</div>
+						<div class="column">
+							<input type="text" placeholder="Code">
+						</div>
+					</div>
+					<teams-input
+						v-for="match in todayMatches"
+						v-bind:match="match"
+						v-bind:key="match.hometeam">
+					</teams-input>
+
+					<div class="three column row">
+						<div class="column">
+							<button class="ui primary button">
+							  Save
+							</button>
+						</div>
+						<div class="two column" style="display:none;">Saved Successfully..!!</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="column">
+			<table class="ui celled striped table">
+				<thead>
+					<tr class="center aligned" >
+						<th>Today's Predictions</th>
+						<th v-for="match in todayMatches" v-bind:key="match.hometeam">
+							<b>{{ match.homeTeamName }} vs {{ match.awayTeamName }}</b>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="center aligned">
+						<td class="collapsing">
+						<i class="male icon"></i> <b>Vishal</b>
+						</td>
+						<td class="positive">Portugal</td>
+						<td class="positive">Draw</td>
+						<td class="positive">Spain</td>
+					</tr>
+					<tr class="center aligned">
+						<td class="collapsing">
+							<i class="male icon"></i> <b>Rajat</b>
+						</td>
+						<td class="positive"></td>
+						<td class="positive"></td>
+						<td class="positive"></td>
+					</tr>
+					<tr class="center aligned">
+						<td class="collapsing">
+						<i class="male icon"></i> <b>Nikunj</b>
+						</td>
+						<td class="positive"></td>
+						<td class="positive"></i></td>
+						<td class="positive"></td>
+					</tr>
+					<tr class="center aligned">
+						<td class="collapsing">
+						<i class="male icon"></i> <b>Ajay</b>
+						</td>
+						<td class="positive"></td>
+						<td class="positive"></td>
+						<td class="positive"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="column">
+			<table class="ui celled striped table">
+				<thead>
+					<tr class="left aligned">
+						<th>
+							<!--<i class="clock icon"></i>--> <b>Yesterday's Matches</b>
+						</th>
+						<th class="center aligned">Score</th>
+						<th>Winner</th>
+					</tr>
+				</thead>
+				<tbody v-for="match in yesterdayResults" :key="match.hometeam">
+					<tr>
+						<td class="collapsing">
+						<i class="futbol icon"></i> <b>{{ match.homeTeamName }} vs {{ match.awayTeamName }}</b>
+						</td>
+						<td class="positive center aligned">{{ match.result.goalsHomeTeam }} - {{ match.result.goalsAwayTeam }}</td>
+						<td class="positive">{{ getWinningTeam(match) }}</td>
+					</tr>
+					<!-- <tr>
+						<td class="collapsing">
+						<i class="clock icon"></i> <b>AA vs BB</b>
+						</td>
+						<td class="positive">{{ calc830today }}</td>
+					</tr> -->
+				</tbody>
+			</table>
+		</div>
+		<div class="column">
+			<table class="ui celled striped table">
+				<thead>
+					<tr class="left aligned">
+						<th colspan="2">
+							<i class="table icon"></i> <b>Points Table</b>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="collapsing">
+						<i class="male icon"></i> <b>Vishal</b>
+						</td>
+						<td class="positive">21</td>
+					</tr>
+					<tr>
+						<td class="collapsing">
+						<i class="male icon"></i> <b>Rajat</b>
+						</td>
+						<td class="positive">25</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+	<script src="vue-app.js"></script>
+	<script>
+		$('.ui.dropdown').dropdown();
+	</script>
+</body>
+</html>
