@@ -9,7 +9,7 @@ Vue.component('teams-input', {
 			<div class="middle aligned five wide column">
 				<label><b>{{ match.homeTeamName }} vs {{ match.awayTeamName }}</b></label>
 			</div>
-			<div class="column">
+			<div class="eleven wide column">
 				<div class="ui three item menu">
 				  <a class="item" @click="activate(1)" :class="{ active : active_el == 1 }">{{ match.homeTeamName }}</a>
 				  <a class="item" @click="activate(2)" :class="{ active : active_el == 2 }">{{ match.awayTeamName }}</a>
