@@ -1,22 +1,27 @@
 Vue.component('teams-input', {
 	props: ['match'],
-	template: `<div class="three column row">
-			<div class="middle aligned column">
+	data: function () {
+		return {
+			active_el: 0
+		}
+	},
+	template: `<div class="two column row">
+			<div class="middle aligned five wide column">
 				<label><b>{{ match.homeTeamName }} vs {{ match.awayTeamName }}</b></label>
 			</div>
-			<div class="two column">
-				<div class="ui selection dropdown">
-				  <input type="hidden" name="prediction">
-				  <i class="dropdown icon"></i>
-				  <div class="default text">Prediction</div>
-				  <div class="menu">
-					<div class="item" :data-value=match.homeTeamName>{{ match.homeTeamName }}</div>
-					<div class="item" :data-value=match.awayTeamName>{{ match.awayTeamName }}</div>
-					<div class="item" data-value="Draw">Draw</div>
-				  </div>
+			<div class="column">
+				<div class="ui three item menu">
+				  <a class="item" @click="activate(1)" :class="{ active : active_el == 1 }">{{ match.homeTeamName }}</a>
+				  <a class="item" @click="activate(2)" :class="{ active : active_el == 2 }">{{ match.awayTeamName }}</a>
+				  <a class="item" @click="activate(3)" :class="{ active : active_el == 3 }">Draw</a>
 				</div>
 			</div>
-		</div>`
+		</div>`,
+	methods: {
+		activate: function(el){
+            this.active_el = el;
+        }
+	}
 }),
 
 Vue.component('today-predictions', {
@@ -45,16 +50,18 @@ var app = new Vue({
 		allData: null,
 		todayMatches: null,
 		yesterdayResults: null,
-		players: null
+		players: null,
+		loading: true,
 	},
-	mounted (){
+	mounted() {
 		axios
 			//.get('https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json')
 			.get('https://api.football-data.org/v1/competitions/467/fixtures', { 
 				'headers': { 
 					'X-Auth-Token': '211d085dbc04481b9caf911983197a50' 
 				} 
-			}).then(response=>(this.buildData(response)))
+			})
+			.then(response=>this.buildData(response))
 			.catch(error=>(console.log(error)))
 	},
 	methods: {
@@ -83,4 +90,4 @@ var app = new Vue({
 			}
 		}
 	}
-})
+});
