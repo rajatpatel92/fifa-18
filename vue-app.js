@@ -11,47 +11,43 @@ Vue.component('teams-input', {
 			</div>
 			<div class="eleven wide column">
 				<div class="ui three item menu">
-				  <a class="item" @click="activate(1)" :class="{ active : active_el == 1 }">{{ match.homeTeamName }}</a>
-				  <a class="item" @click="activate(2)" :class="{ active : active_el == 2 }">{{ match.awayTeamName }}</a>
-				  <a class="item" @click="activate(3)" :class="{ active : active_el == 3 }">Draw</a>
+				  <a class="item" @click="activate(1, match)" :class="{ active : active_el == 1 }">{{ match.homeTeamName }}</a>
+				  <a class="item" @click="activate(2, match)" :class="{ active : active_el == 2 }">{{ match.awayTeamName }}</a>
+				  <a class="item" @click="activate(3, match)" :class="{ active : active_el == 3 }">Draw</a>
 				</div>
 			</div>
 		</div>`,
 	methods: {
-		activate: function(el){
+		activate: function(el, match){
             this.active_el = el;
+			var prediction = {
+				match: match.homeTeamName + "-" + match.awayTeamName,
+				date: match.date
+			}
+			if (el == 1) {
+				prediction.guess = match.homeTeamName;
+			} else if (el == 2) {
+				prediction.guess = match.awayTeamName;
+			} else if (el == 3) {
+				prediction.guess = "Draw";
+			}
+			this.$emit('active_el', prediction);
         }
 	}
-}),
-
-Vue.component('today-predictions', {
-	props: [],
-	template: `<tr>
-		<td class="collapsing">
-		<i class="clock icon"></i> <b>Vishal</b>
-		</td>
-		<td class="positive">Portugal, Spain, Draw</td>
-	</tr>`
-}),
-
-Vue.component('points-table', {
-	props: [],
-	template: `<tr>
-		<td class="collapsing">
-		<i class="clock icon"></i> <b>Vishal</b>
-		</td>
-		<td class="positive">21</td>
-	</tr>`
 })
 
 var app = new Vue({
 	el: '#app',
 	data: {
+		userCode: null,
 		allData: null,
 		todayMatches: null,
 		yesterdayResults: null,
 		players: null,
 		loading: true,
+		predictions: [],
+		prediction: {},
+		message: ''
 	},
 	mounted() {
 		axios
@@ -63,6 +59,15 @@ var app = new Vue({
 			})
 			.then(response=>this.buildData(response))
 			.catch(error=>(console.log(error)))
+	},
+	watch: {
+		'userCode':  {
+			handler:function (val, oldVal){
+				if (val.trim()){
+					this.message = '';
+				}
+			}
+		}
 	},
 	methods: {
 		buildData: function(receivedData) {
@@ -88,6 +93,48 @@ var app = new Vue({
 			} else {
 				return match.awayTeamName;
 			}
+		},
+		onTeamSelect: function (prediction) {
+			if (this.userCode) {
+				prediction.userCode = this.userCode;
+				_.each(this.predictions, function (item) {
+					if (prediction.match == item.match) {
+						if (item.userCode) {
+							item.userCode = this.userCode;
+						}
+						item.guess = prediction.guess;
+						item.date = prediction.date;
+						item.userCode = prediction.userCode;
+						return;
+					}
+				});
+				if (this.predictions.length < 3) {
+					this.predictions.push(prediction);
+				}
+				console.log(this.predictions);
+			} else {
+				this.message = "Please enter your User Code!!"
+			}
+		},
+		writePredictionData: function (userid, predictions) {
+			var pred = {
+				id: userid,
+				predictions: predictions
+			}
+		},
+		saveIt: function () {
+			if (!this.userCode) {
+				this.message = "Please enter User Code and Try Again!";
+			} else {
+				_.each(this.predictions, function(prediction) {
+					if (!prediction.userCode) {
+						this.message = "Please enter User Code and Try Again!";
+					} else if (!prediction.guess) {
+						this.message = "Please make all predictions before saving";
+					}
+				});
+			}
+			console.log(this.predictions);
 		}
 	}
 });

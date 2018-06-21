@@ -24,22 +24,23 @@
 							<label><b>Enter Your Code:</b></label>
 						</div>
 						<div class="column">
-							<input type="text" placeholder="Secret Code">
+							<input v-model="userCode" type="text" placeholder="Secret Code">
 						</div>
 					</div>
 					<teams-input
 						v-for="match in todayMatches"
 						v-bind:match="match"
-						v-bind:key="match.hometeam">
+						v-bind:key="match.hometeam"
+						v-on:active_el="onTeamSelect">
 					</teams-input>
 
 					<div class="three column row">
 						<div class="column">
-							<button class="ui primary button">
+							<button class="ui primary button" v-on:click="saveIt">
 							  Save
 							</button>
 						</div>
-						<div class="two column" style="display:none;">Saved Successfully..!!</div>
+						<div class="ten wide column">{{ message }}</div>
 					</div>
 				</div>
 			</div>
@@ -148,6 +149,19 @@
 		</div>
 		</div>
 	</div>
+	<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyBLKGQA5OZj52M-G55NeujoF2V9bwqItew",
+		authDomain: "ts-fifa18.firebaseapp.com",
+		databaseURL: "https://ts-fifa18.firebaseio.com",
+		projectId: "ts-fifa18",
+		storageBucket: "ts-fifa18.appspot.com",
+		messagingSenderId: "186370413467"
+	  };
+	  firebase.initializeApp(config);
+	</script>
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
