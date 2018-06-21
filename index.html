@@ -44,6 +44,35 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="column">
+			<table class="ui celled striped table">
+				<thead>
+					<tr class="left aligned">
+						<th>
+							<!--<i class="clock icon"></i>--> <b>Yesterday's Matches</b>
+						</th>
+						<th class="center aligned">Score</th>
+						<th>Winner</th>
+					</tr>
+				</thead>
+				<tbody v-for="match in yesterdayResults" :key="match.hometeam">
+					<tr>
+						<td class="collapsing">
+						<i class="futbol icon"></i> <b>{{ match.homeTeamName }} vs {{ match.awayTeamName }}</b>
+						</td>
+						<td class="positive center aligned">{{ match.result.goalsHomeTeam }} - {{ match.result.goalsAwayTeam }}</td>
+						<td class="positive">{{ getWinningTeam(match) }}</td>
+					</tr>
+					<!-- <tr>
+						<td class="collapsing">
+						<i class="clock icon"></i> <b>AA vs BB</b>
+						</td>
+						<td class="positive">{{ calc830today }}</td>
+					</tr> -->
+				</tbody>
+			</table>
+		</div>
 
 		<div class="column">
 			<table class="ui celled striped table">
@@ -91,34 +120,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="column">
-			<table class="ui celled striped table">
-				<thead>
-					<tr class="left aligned">
-						<th>
-							<!--<i class="clock icon"></i>--> <b>Yesterday's Matches</b>
-						</th>
-						<th class="center aligned">Score</th>
-						<th>Winner</th>
-					</tr>
-				</thead>
-				<tbody v-for="match in yesterdayResults" :key="match.hometeam">
-					<tr>
-						<td class="collapsing">
-						<i class="futbol icon"></i> <b>{{ match.homeTeamName }} vs {{ match.awayTeamName }}</b>
-						</td>
-						<td class="positive center aligned">{{ match.result.goalsHomeTeam }} - {{ match.result.goalsAwayTeam }}</td>
-						<td class="positive">{{ getWinningTeam(match) }}</td>
-					</tr>
-					<!-- <tr>
-						<td class="collapsing">
-						<i class="clock icon"></i> <b>AA vs BB</b>
-						</td>
-						<td class="positive">{{ calc830today }}</td>
-					</tr> -->
-				</tbody>
-			</table>
-		</div>
+		
 		<div class="column">
 			<table class="ui celled striped table">
 				<thead>
