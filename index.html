@@ -76,7 +76,11 @@
 		</div>
 
 		<div class="column">
-			<table class="ui celled striped table">
+			<prediction-grid
+				:data="todayPredictions"
+				:columns="[ 'userCode', 'match', 'guess' ]">
+			</prediction-grid>
+			<!-- <table class="ui celled striped table">
 				<thead>
 					<tr class="center aligned" >
 						<th>Today's Predictions</th>
@@ -85,7 +89,8 @@
 						</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody v-for="prediction in todayPredictions">
+					<!-- {{#if prediction.key == todayDate }} 
 					<tr class="center aligned">
 						<td class="collapsing">
 						<i class="male icon"></i> <b>Vishal</b>
@@ -94,32 +99,9 @@
 						<td class="positive">Draw</td>
 						<td class="positive">Spain</td>
 					</tr>
-					<tr class="center aligned">
-						<td class="collapsing">
-							<i class="male icon"></i> <b>Rajat</b>
-						</td>
-						<td class="positive"></td>
-						<td class="positive"></td>
-						<td class="positive"></td>
-					</tr>
-					<tr class="center aligned">
-						<td class="collapsing">
-						<i class="male icon"></i> <b>Nikunj</b>
-						</td>
-						<td class="positive"></td>
-						<td class="positive"></i></td>
-						<td class="positive"></td>
-					</tr>
-					<tr class="center aligned">
-						<td class="collapsing">
-						<i class="male icon"></i> <b>Ajay</b>
-						</td>
-						<td class="positive"></td>
-						<td class="positive"></td>
-						<td class="positive"></td>
-					</tr>
+					<!-- {{/if}} 
 				</tbody>
-			</table>
+			</table> -->
 		</div>
 		
 		<div class="column">
@@ -131,38 +113,23 @@
 						</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody v-for="player in players" :key="player.name">
 					<tr>
 						<td class="collapsing">
-						<i class="male icon"></i> <b>Vishal</b>
+						<i class="male icon"></i> <b>{{ player.name }}</b>
 						</td>
-						<td class="positive">21</td>
-					</tr>
-					<tr>
-						<td class="collapsing">
-						<i class="male icon"></i> <b>Rajat</b>
-						</td>
-						<td class="positive">25</td>
+						<td class="positive">{{ player.points }}</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 		</div>
+		
+		{{ calculatePoints(todayMatches) }}
 	</div>
 	<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
-	<script>
-	  // Initialize Firebase
-	  var config = {
-		apiKey: "AIzaSyBLKGQA5OZj52M-G55NeujoF2V9bwqItew",
-		authDomain: "ts-fifa18.firebaseapp.com",
-		databaseURL: "https://ts-fifa18.firebaseio.com",
-		projectId: "ts-fifa18",
-		storageBucket: "ts-fifa18.appspot.com",
-		messagingSenderId: "186370413467"
-	  };
-	  firebase.initializeApp(config);
-	</script>
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+	<script src="https://unpkg.com/vuefire/dist/vuefire.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 	<script src="vue-app.js"></script>
