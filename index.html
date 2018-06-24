@@ -36,11 +36,11 @@
 
 					<div class="three column row">
 						<div class="column">
-							<button class="ui primary button" v-on:click="saveIt">
+							<button class="ui primary button" v-on:click="saveIt" :disabled="hasError">
 							  Save
 							</button>
 						</div>
-						<div class="ten wide column">{{ message }}</div>
+						<div class="middle aligned ten wide column">{{ message }}</div>
 					</div>
 				</div>
 			</div>
@@ -78,7 +78,7 @@
 		<div class="column">
 			<prediction-grid
 				:data="todayPredictions"
-				:columns="[ 'userCode', 'match', 'guess' ]">
+				:columns="[ 'playerName', 'match', 'guess' ]">
 			</prediction-grid>
 			<!-- <table class="ui celled striped table">
 				<thead>
@@ -108,8 +108,13 @@
 			<table class="ui celled striped table">
 				<thead>
 					<tr class="left aligned">
-						<th colspan="2">
+						<th>
 							<i class="table icon"></i> <b>Points Table</b>
+						</th>
+						<th class="right aligned">
+							<button class="ui primary button right aligned" v-if="showRefresh" v-on:click="calculatePoints">
+								Refresh
+							</button>
 						</th>
 					</tr>
 				</thead>
@@ -124,8 +129,6 @@
 			</table>
 		</div>
 		</div>
-		
-		{{ calculatePoints(todayMatches) }}
 	</div>
 	<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
