@@ -184,6 +184,9 @@ var app = new Vue({
 						this.message = "No player found with entered Code. Please enter correct code."
 						this.hasError = true;
 					}
+					if (val.trim() == "YISY"){
+						this.showRefresh = true;
+					}
 				}
 			}
 		}
@@ -283,7 +286,9 @@ var app = new Vue({
 					this.message = "Please enter User Code and Try Again!";
 				} else {
 					var playerName = _.findWhere(this.players, {userCode: this.userCode});
-					if (playerName){
+					var playerTodayPred = _.findWhere(this.todayPredictions, {userCode: this.userCode});
+					if (!playerTodayPred) {
+						if (playerName){
 						_.each(this.predictions, function(prediction) {
 							if (!prediction.userCode) {
 								this.hasError = true;
@@ -293,9 +298,13 @@ var app = new Vue({
 								this.message = "Please make all predictions before saving";
 							}
 						});
+						} else {
+							this.hasError = true;
+							this.message = "No player found with entered Code. Please enter correct code."
+						}
 					} else {
 						this.hasError = true;
-						this.message = "No player found with entered Code. Please enter correct code."
+						this.message = "You have already made predicitions for today!"
 					}
 				}
 
