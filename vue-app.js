@@ -309,7 +309,7 @@ var app = new Vue({
 						}
 					} else {
 						this.hasError = true;
-						this.message = "You have already made predicitions for today!"
+						this.message = "You have already made predictions for today!"
 					}
 				}
 
