@@ -258,7 +258,7 @@ var app = new Vue({
 							return;
 						}
 					});
-					if (this.predictions.length < 3) {
+					if (this.predictions.length < this.todayMatches.length) {
 						this.predictions.push(prediction);
 					}
 					console.log(this.predictions);
