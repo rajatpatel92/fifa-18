@@ -40,6 +40,9 @@ Vue.component('teams-input', {
 Vue.component('prediction-grid', {
   template: `<table class="ui celled striped table">
     <thead>
+		<tr class="center aligned">
+			<th colspan="3">Today's Predictions</th>
+		</tr>
       <tr class="center aligned">
         <th v-for="key in columns"
           @click="sortBy(key)"
@@ -186,6 +189,8 @@ var app = new Vue({
 					}
 					if (val.trim() == "YISY"){
 						this.showRefresh = true;
+					} else {
+						this.showRefresh = false;
 					}
 				}
 			}
