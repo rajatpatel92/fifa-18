@@ -77,9 +77,11 @@
 
 		<div class="column">
 			<prediction-grid
-				:data="todayPredictions"
+				:data="predictions"
 				:columns="[ 'playerName', 'match', 'guess' ]">
 			</prediction-grid>
+			<br/>
+			*Predictions are not saved until you click SAVE button.
 			<!-- <table class="ui celled striped table">
 				<thead>
 					<tr class="center aligned" >

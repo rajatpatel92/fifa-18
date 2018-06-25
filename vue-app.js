@@ -41,7 +41,7 @@ Vue.component('prediction-grid', {
   template: `<table class="ui celled striped table">
     <thead>
 		<tr class="center aligned">
-			<th colspan="3">Today's Predictions</th>
+			<th colspan="3">My Today's Predictions*</th>
 		</tr>
       <tr class="center aligned">
         <th v-for="key in columns"
@@ -223,6 +223,9 @@ var app = new Vue({
 			});
 			
 			return todayAllpreds;
+		},
+		myTodayPredictions: function() {
+			return _.findWhere(this.todayPredictions, {userCode: this.userCode});
 		}
 	},
 	methods: {
@@ -255,6 +258,7 @@ var app = new Vue({
 				var playerName = _.findWhere(this.players, {userCode: this.userCode});
 				if (playerName){
 					prediction.userCode = this.userCode;
+					prediction.playerName = playerName.name;
 					_.each(this.predictions, function (item) {
 						if (prediction.match == item.match) {
 							if (item.userCode) {
@@ -267,21 +271,17 @@ var app = new Vue({
 						}
 					});
 					if (this.predictions.length < this.todayMatches.length) {
-						this.predictions.push(prediction);
+						if (!_.findWhere(this.predictions, { match: prediction.match })){
+							this.predictions.push(prediction);
+						}
 					}
-					console.log(this.predictions);
+					//console.log(this.predictions);
 				} else {
 					this.hasError = true;
 					this.message = "No player found with entered Code. Please enter correct code.";
 				}
 			} else {
 				this.message = "Please enter your User Code before saving!!"
-			}
-		},
-		writePredictionData: function (userid, predictions) {
-			var pred = {
-				id: userid,
-				predictions: predictions
 			}
 		},
 		saveIt: function () {
@@ -294,15 +294,15 @@ var app = new Vue({
 					var playerTodayPred = _.findWhere(this.todayPredictions, {userCode: this.userCode});
 					if (!playerTodayPred) {
 						if (playerName){
-						_.each(this.predictions, function(prediction) {
-							if (!prediction.userCode) {
-								this.hasError = true;
-								this.message = "Please enter User Code and Try Again!";
-							} else if (!prediction.guess) {
-								this.hasError = true;
-								this.message = "Please make all predictions before saving";
-							}
-						});
+							_.each(this.predictions, function(prediction) {
+								if (!prediction.userCode) {
+									this.hasError = true;
+									this.message = "Please enter User Code and Try Again!";
+								} else if (!prediction.guess) {
+									this.hasError = true;
+									this.message = "Please make all predictions before saving";
+								}
+							});
 						} else {
 							this.hasError = true;
 							this.message = "No player found with entered Code. Please enter correct code."
