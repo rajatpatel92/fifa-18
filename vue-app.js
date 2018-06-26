@@ -201,7 +201,7 @@ var app = new Vue({
 		},
 		defaultMatchStart: function(){
 			var today = new Date();
-			return new Date(today.getFullYear(), today.getMonth(), today.getDate(), 17, 15, 0, 0).getTime();
+			return new Date(today.getFullYear(), today.getMonth(), today.getDate(), 19, 15, 0, 0).getTime();
 		},
 		todayPredictions: function() {
 			//Get Today Date
@@ -312,7 +312,7 @@ var app = new Vue({
 
 				if ((new Date()).getTime() > this.defaultMatchStart) {
 					this.hasError = true;
-					this.message = "Submission for today has been closed at 5:15 pm.";
+					this.message = "Submission for today has been closed at 7:15 pm.";
 				}
 
 				//Make sure there is no error and player has been identified
