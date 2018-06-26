@@ -129,20 +129,6 @@ var playersRef = db.ref('players')
 var predictionsRef = db.ref('predictions')
 var datesRef = db.ref('dates')
 
-// first argument is the source array, followed by one or more property names
-var pluckMany = function() {
-    // get the property names to pluck
-    var source = arguments[0];
-    var propertiesToPluck = _.rest(arguments, 1);
-    return _.map(source, function(item) {
-        var obj = {};
-        _.each(propertiesToPluck, function(property) {
-            obj[property] = item[property]; 
-        });
-        return obj;
-    });
-};
-
 var app = new Vue({
 	el: '#app',
 	data: {
@@ -183,6 +169,17 @@ var app = new Vue({
 					if (playerName) {
 						this.message = '';
 						this.hasError = false;
+						var playerTodayPreds = _.filter(this.todayPredictions, function (item) {
+							return item.userCode == val.trim()
+						});
+						if (playerTodayPreds.length != 0){
+							app.predictions = [];
+							_.each(playerTodayPreds, function(pred) {
+								app.predictions.push(pred);
+							});
+							this.message = "You have already made predictions for today!";
+							this.hasError = true;
+						}
 					} else {
 						this.message = "No player found with entered Code. Please enter correct code."
 						this.hasError = true;
