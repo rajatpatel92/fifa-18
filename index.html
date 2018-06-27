@@ -49,12 +49,17 @@
 		<div class="column">
 			<table class="ui celled striped table">
 				<thead>
+					<tr class="center aligned">
+						<th colspan="5">Yesterday Results</th>
+					</tr>
 					<tr class="left aligned">
 						<th>
-							<!--<i class="clock icon"></i>--> <b>Yesterday's Matches</b>
+							<b>Matches</b>
 						</th>
 						<th class="center aligned">Score</th>
 						<th>Winner</th>
+						<th>Winning Players</th>
+						<th class="center aligned">Points to Each Winner</th>
 					</tr>
 				</thead>
 				<tbody v-for="match in yesterdayResults" :key="match.hometeam">
@@ -64,6 +69,8 @@
 						</td>
 						<td class="positive center aligned">{{ match.result.goalsHomeTeam }} - {{ match.result.goalsAwayTeam }}</td>
 						<td class="positive">{{ getWinningTeam(match) }}</td>
+						<td class="positive">{{ match.winningPlayers }}</td>
+						<td class="positive center aligned">{{ match.pointsToWinner }}</td>
 					</tr>
 					<!-- <tr>
 						<td class="collapsing">

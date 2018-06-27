@@ -142,13 +142,19 @@ var app = new Vue({
 		message: '',
 		showRefresh: false,
 		pointsUpdatedOnce: false,
+		updatePointsInDB: false,
 		savedOnce: false,
 		hasError: false
 	},
 	firebase: {
 		players: playersRef,
 		fbpredictions: predictionsRef,
-		dates: datesRef
+		dates: {
+			source: datesRef,
+			readyCallback: function() {
+				this.calculatePoints();
+			}
+		}
 	},
 	mounted() {
 		axios
@@ -352,9 +358,14 @@ var app = new Vue({
 		},
 		calculatePoints: function () {
 			var lastRefreshDate = this.dates;
-			console.log("lastrefdate");
-			console.log(lastRefreshDate[0][".value"]);
-			if (lastRefreshDate[0][".value"] !== this.todayDate && !this.pointsUpdatedOnce) {
+			console.log("Last Points Calculation Date : " + lastRefreshDate[0][".value"]);
+			//if (!this.pointsUpdatedOnce) {
+				//Check in DB for last Update Date
+				if (lastRefreshDate[0][".value"] !== this.todayDate) { 
+					this.updatePointsInDB = true; 
+				} else {
+					this.updatePointsInDB = false;
+				}
 				//Go through yesterday's predictions and calculate points
 				var yesterdayWinners = [];
 				var players = this.players;
@@ -388,35 +399,61 @@ var app = new Vue({
 					console.log(counts);
 					var winningPlayers = _.pluck(_.filter(matchPreds, function(pred) { return pred.guess == winner.winner }), 'userCode' );
 					console.log(winningPlayers);
-					//Add points to winner account
-					console.log("Before points addition");
-					console.log(players);
-					_.each(winningPlayers, function (winningPlayer) {
-						var player = _.findWhere(players, { userCode: winningPlayer});
-						if (player && counts["losingPlayers"]) {
-							player.points += parseInt(counts["losingPlayers"]);
-						}
+					//Push winning players to yesterdayResults object
+					app.pushWinningPlayers(winningPlayers, winner.match, counts['losingPlayers']);
+					if (app.updatePointsInDB == true) {
+						//Add points to winner account
+						console.log("Before points addition");
+						console.log(players);
+						_.each(winningPlayers, function (winningPlayer) {
+							var player = _.findWhere(players, { userCode: winningPlayer});
+							if (player && counts["losingPlayers"]) {
+								player.points += parseInt(counts["losingPlayers"]);
+							}
+						});
+						console.log("After points addition")
+						console.log(players);
+					}
+				});
+
+				if (this.updatePointsInDB == true) {
+					_.each(this.players, function (player) {
+						app.updatePlayers(player);
 					});
-					console.log("After points addition")
-					console.log(players);
-					
-				});
 
-				_.each(this.players, function (player) {
-					app.updatePlayers(player);
-				});
+					_.each(lastRefreshDate, function(date){
+						date[".value"] = app.todayDate;
+						app.updateDates(date);
+					});
+				}
 
-				_.each(lastRefreshDate, function(date){
-					date[".value"] = app.todayDate;
-					app.updateDates(date);
-				});
-
-				this.pointsUpdatedOnce = true;
+				//this.pointsUpdatedOnce = true;
 				
 				console.log(yesterdayPredictions);
 				console.log(yesterdayWinners);
-			} else {
-				console.log("Skipping calculation - Point calculation last date is same as today's date")
+			//} else {
+			//	console.log("Skipping calculation - Point calculation last date is same as today's date")
+			//}
+		},
+		pushWinningPlayers: function (winningPlayers, match, pointsToWinner) {
+			//Get Players' first names from user codes
+			var playerNames = [];
+			_.each(winningPlayers, function(code) {
+				var playerName = _.findWhere(app.players, {userCode: code});
+				if (playerName){
+					var firstName = playerName.name.split(" ")[0];
+					playerNames.push(" " + firstName); //add space after player name for better looking
+				}
+			});
+			//Push winner names to respective match result record
+			var teams = match.split("-");
+			if (teams.length == 2) {
+				var yesterdayMatchIndex = _.findIndex(app.yesterdayResults, { homeTeamName: teams[0], awayTeamName: teams[1] });
+				if (yesterdayMatchIndex !== -1) {
+					//Add winningPlayers property to the object and make it reactive to display changes on the web page
+					var newObject = _.extend({}, app.yesterdayResults[yesterdayMatchIndex], { winningPlayers: playerNames.toString(), pointsToWinner: pointsToWinner });
+					app.$set(app.yesterdayResults, yesterdayMatchIndex, newObject);
+				}
 			}
 		}
 	}
