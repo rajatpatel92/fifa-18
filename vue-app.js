@@ -229,6 +229,9 @@ var app = new Vue({
 		},
 		myTodayPredictions: function() {
 			return _.findWhere(this.todayPredictions, {userCode: this.userCode});
+		},
+		sortedPlayers: function () {
+			return _.sortBy(this.players, 'points').reverse();
 		}
 	},
 	methods: {
