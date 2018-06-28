@@ -392,27 +392,27 @@ var app = new Vue({
 				_.each(yesterdayWinners, function (winner) {
 					//Filter current match
 					var matchPreds = _.filter(yesterdayPredictions, function (pred) { return pred.match === winner.match });
-					console.log(matchPreds);
+					//console.log(matchPreds);
 					//Count points to be credited to winner
 					var counts = _.countBy(matchPreds, function (pred){ return pred.guess == winner.winner ? 'winningPlayers' : 'losingPlayers' });
-					console.log(counts);
+					//console.log(counts);
 					var winningPlayers = _.pluck(_.filter(matchPreds, function(pred) { return pred.guess == winner.winner }), 'userCode' );
-					console.log(winningPlayers);
+					//console.log(winningPlayers);
 					var pointsToWinner = app.players.length - winningPlayers.length;
 					//Push winning players to yesterdayResults object
 					app.pushWinningPlayers(winningPlayers, winner.match, pointsToWinner); //counts['losingPlayers']
 					if (app.updatePointsInDB == true) {
 						//Add points to winner account
-						console.log("Before points addition");
-						console.log(players);
+						//console.log("Before points addition");
+						//console.log(players);
 						_.each(winningPlayers, function (winningPlayer) {
 							var player = _.findWhere(players, { userCode: winningPlayer});
 							if (player && pointsToWinner) {
 								player.points += pointsToWinner;
 							}
 						});
-						console.log("After points addition")
-						console.log(players);
+						//console.log("After points addition")
+						//console.log(players);
 					}
 				});
 
@@ -429,8 +429,8 @@ var app = new Vue({
 
 				//this.pointsUpdatedOnce = true;
 				
-				console.log(yesterdayPredictions);
-				console.log(yesterdayWinners);
+				//console.log(yesterdayPredictions);
+				//console.log(yesterdayWinners);
 			//} else {
 			//	console.log("Skipping calculation - Point calculation last date is same as today's date")
 			//}
