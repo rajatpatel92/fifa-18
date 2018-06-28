@@ -187,13 +187,9 @@ var app = new Vue({
 							this.hasError = true;
 						}
 					} else {
+						app.predictions = [];
 						this.message = "No player found with entered Code. Please enter correct code."
 						this.hasError = true;
-					}
-					if (val.trim() == "YISY"){
-						this.showRefresh = true;
-					} else {
-						this.showRefresh = false;
 					}
 				}
 			}
