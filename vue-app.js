@@ -402,16 +402,17 @@ var app = new Vue({
 					console.log(counts);
 					var winningPlayers = _.pluck(_.filter(matchPreds, function(pred) { return pred.guess == winner.winner }), 'userCode' );
 					console.log(winningPlayers);
+					var pointsToWinner = app.players.length - winningPlayers.length;
 					//Push winning players to yesterdayResults object
-					app.pushWinningPlayers(winningPlayers, winner.match, counts['losingPlayers']);
+					app.pushWinningPlayers(winningPlayers, winner.match, pointsToWinner); //counts['losingPlayers']
 					if (app.updatePointsInDB == true) {
 						//Add points to winner account
 						console.log("Before points addition");
 						console.log(players);
 						_.each(winningPlayers, function (winningPlayer) {
 							var player = _.findWhere(players, { userCode: winningPlayer});
-							if (player && counts["losingPlayers"]) {
-								player.points += parseInt(counts["losingPlayers"]);
+							if (player && pointsToWinner) {
+								player.points += pointsToWinner;
 							}
 						});
 						console.log("After points addition")
@@ -441,13 +442,17 @@ var app = new Vue({
 		pushWinningPlayers: function (winningPlayers, match, pointsToWinner) {
 			//Get Players' first names from user codes
 			var playerNames = [];
-			_.each(winningPlayers, function(code) {
-				var playerName = _.findWhere(app.players, {userCode: code});
-				if (playerName){
-					var firstName = playerName.name.split(" ")[0];
-					playerNames.push(" " + firstName); //add space after player name for better looking
-				}
-			});
+			if (winningPlayers.length == 0){
+				playerNames.push("None");
+			} else {
+				_.each(winningPlayers, function(code) {
+					var playerName = _.findWhere(app.players, {userCode: code});
+					if (playerName){
+						var firstName = playerName.name.split(" ")[0];
+						playerNames.push(" " + firstName); //add space after player name for better looking
+					}
+				});
+			}
 			//Push winner names to respective match result record
 			var teams = match.split("-");
 			if (teams.length == 2) {
