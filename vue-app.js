@@ -151,6 +151,7 @@ var app = new Vue({
 		fbpredictions: predictionsRef,
 		dates: {
 			source: datesRef,
+			asObject: true,
 			readyCallback: function() {
 				this.calculatePoints();
 			}
@@ -356,11 +357,11 @@ var app = new Vue({
 			datesRef.child(item['.key']).set(copy)
 		},
 		calculatePoints: function () {
-			var lastRefreshDate = this.dates;
-			console.log("Last Points Calculation Date : " + lastRefreshDate[0][".value"]);
+			var lastRefreshDate = this.dates.lastPointsCalc;
+			console.log("Last Points Calculation Date : " + lastRefreshDate);
 			//if (!this.pointsUpdatedOnce) {
 				//Check in DB for last Update Date
-				if (lastRefreshDate[0][".value"] !== this.todayDate) { 
+				if (lastRefreshDate !== this.todayDate) { 
 					this.updatePointsInDB = true; 
 				} else {
 					this.updatePointsInDB = false;
@@ -421,10 +422,15 @@ var app = new Vue({
 						app.updatePlayers(player);
 					});
 
-					_.each(lastRefreshDate, function(date){
-						date[".value"] = app.todayDate;
-						app.updateDates(date);
-					});
+					datesRef.update({
+						lastPointsCalc: app.todayDate
+					}).then(response=>console.log(response))
+					.catch(error=>console.log(error))
+					
+					//_.each(lastRefreshDate, function(date){
+					//	date[".value"] = app.todayDate;
+					//	app.updateDates(date);
+					//});
 				}
 
 				//this.pointsUpdatedOnce = true;
