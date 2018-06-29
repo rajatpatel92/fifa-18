@@ -239,6 +239,10 @@ var app = new Vue({
 			this.todayMatches = _.filter(this.allData.data.fixtures, function(fixture) {
 				return fixture.date.toString().includes(today.getFullYear() +'-0'+ parseInt(thisMonth+1) +'-'+ today.getDate());
 			});
+			if (this.todayMatches.length == 0) {
+				this.hasError = true;
+				this.message = "No matches scheduled for today!!";
+			}
 			this.yesterdayResults = _.filter(this.allData.data.fixtures, function(fixture) {
 				if (today.getDate === 1) {
 					return fixture.date.toString().includes(today.getFullYear() +'-'+ today.getMonth() +'-'+ '30');
