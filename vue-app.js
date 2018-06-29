@@ -139,7 +139,7 @@ var app = new Vue({
 		loading: true,
 		predictions: [],
 		prediction: {},
-		pointsMultiplier: 1,
+		pointsMultiplier: 2,
 		message: '',
 		showRefresh: false,
 		pointsUpdatedOnce: false,
