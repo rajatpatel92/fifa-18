@@ -13,7 +13,7 @@ Vue.component('teams-input', {
 				<div class="ui three item menu">
 				  <a class="item" @click="activate(1, match)" :class="{ active : active_el == 1 }">{{ match.homeTeamName }}</a>
 				  <a class="item" @click="activate(2, match)" :class="{ active : active_el == 2 }">{{ match.awayTeamName }}</a>
-				  <a class="item" @click="activate(3, match)" :class="{ active : active_el == 3 }">Draw</a>
+				  <!-- <a class="item" @click="activate(3, match)" :class="{ active : active_el == 3 }">Draw</a> -->
 				</div>
 			</div>
 		</div>`,
