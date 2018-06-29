@@ -145,7 +145,8 @@ var app = new Vue({
 		pointsUpdatedOnce: false,
 		updatePointsInDB: false,
 		savedOnce: false,
-		hasError: false
+		hasError: false,
+		noMatchToday: false
 	},
 	firebase: {
 		players: playersRef,
@@ -243,6 +244,7 @@ var app = new Vue({
 			if (this.todayMatches.length == 0) {
 				this.hasError = true;
 				this.message = "No matches scheduled for today!!";
+				this.noMatchToday = true;
 			}
 			this.yesterdayResults = _.filter(this.allData.data.fixtures, function(fixture) {
 				if (today.getDate === 1) {

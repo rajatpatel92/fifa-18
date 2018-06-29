@@ -24,7 +24,7 @@
 							<label><b>Enter Your Code:</b></label>
 						</div>
 						<div class="column">
-							<input v-model="userCode" type="text" placeholder="Secret Code">
+							<input v-model="userCode" type="text" placeholder="Secret Code" :disabled="noMatchToday">
 						</div>
 					</div>
 					<teams-input
