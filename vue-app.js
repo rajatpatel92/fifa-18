@@ -139,6 +139,7 @@ var app = new Vue({
 		loading: true,
 		predictions: [],
 		prediction: {},
+		pointsMultiplier: 1,
 		message: '',
 		showRefresh: false,
 		pointsUpdatedOnce: false,
@@ -403,7 +404,7 @@ var app = new Vue({
 					//console.log(counts);
 					var winningPlayers = _.pluck(_.filter(matchPreds, function(pred) { return pred.guess == winner.winner }), 'userCode' );
 					//console.log(winningPlayers);
-					var pointsToWinner = app.players.length - winningPlayers.length;
+					var pointsToWinner = (app.players.length - winningPlayers.length) * app.pointsMultiplier;
 					//Push winning players to yesterdayResults object
 					app.pushWinningPlayers(winningPlayers, winner.match, pointsToWinner); //counts['losingPlayers']
 					if (app.updatePointsInDB == true) {
