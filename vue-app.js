@@ -255,7 +255,15 @@ var app = new Vue({
 			if (match.result.goalsHomeTeam > match.result.goalsAwayTeam) {
 				return match.homeTeamName;
 			} else if (match.result.goalsHomeTeam == match.result.goalsAwayTeam) {
-				return "Draw";
+				if (match.result.penaltyShootout) {
+					if (match.result.penaltyShootout.goalsHomeTeam > match.result.penaltyShootout.goalsAwayTeam) {
+						return match.homeTeamName;
+					} else {
+						return match.awayTeamName;
+					}
+				} else {
+					return "Draw";	
+				}
 			} else {
 				return match.awayTeamName;
 			}
@@ -416,28 +424,17 @@ var app = new Vue({
 				});
 
 				if (this.updatePointsInDB == true) {
-					_.each(this.players, function (player) {
-						app.updatePlayers(player);
-					});
+					if (app.dates.lastPointsCalc !== app.todayDate && app.todayDate.length === 10) {
+						_.each(this.players, function (player) {
+							app.updatePlayers(player);
+						});
 
-					datesRef.update({
-						lastPointsCalc: app.todayDate
-					}).then(response=>console.log(response))
-					.catch(error=>console.log(error))
-					
-					//_.each(lastRefreshDate, function(date){
-					//	date[".value"] = app.todayDate;
-					//	app.updateDates(date);
-					//});
+						datesRef.update({
+							lastPointsCalc: app.todayDate
+						}).then(response=>console.log(response))
+						.catch(error=>console.log(error))
+					}
 				}
-
-				//this.pointsUpdatedOnce = true;
-				
-				//console.log(yesterdayPredictions);
-				//console.log(yesterdayWinners);
-			//} else {
-			//	console.log("Skipping calculation - Point calculation last date is same as today's date")
-			//}
 		},
 		pushWinningPlayers: function (winningPlayers, match, pointsToWinner) {
 			//Get Players' first names from user codes
