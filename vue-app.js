@@ -201,8 +201,7 @@ var app = new Vue({
 	computed: {
 		todayDate: function() {
 			var today = new Date();
-			var thisMonth = parseInt(today.getMonth());
-			return today.getFullYear() +"-0"+ parseInt(thisMonth+1) + "-" + today.getDate();
+			return today.toISOString().substr(0,10);
 		},
 		defaultMatchStart: function(){
 			var today = new Date();
@@ -211,8 +210,6 @@ var app = new Vue({
 		todayPredictions: function() {
 			//Get Today Date
 			var today = new Date();
-			var thisMonth = parseInt(today.getMonth());
-			var todayDate = today.getFullYear() +"-0"+ parseInt(thisMonth+1) + "-" + today.getDate();
 			
 			//Build Today's Matches Array
 			var listMatches = [];
@@ -221,7 +218,7 @@ var app = new Vue({
 			})
 			
 			var todayAllpreds = _.filter(this.fbpredictions, function (pred) {
-				return pred.date.includes(todayDate) && _.contains(listMatches, pred.match);
+				return pred.date.includes(today.toISOString().substr(0,10)) && _.contains(listMatches, pred.match);
 			});
 			
 			return todayAllpreds;
@@ -235,11 +232,15 @@ var app = new Vue({
 	},
 	methods: {
 		buildData: function(receivedData) {
+			//Set Today date
 			var today = new Date();
-			var thisMonth = parseInt(today.getMonth());
+			//Set Yesterday Date
+			var yesterday = new Date();
+			yesterday.setDate(yesterday.getDate() - 1);
+
 			this.allData = receivedData;
 			this.todayMatches = _.filter(this.allData.data.fixtures, function(fixture) {
-				return fixture.date.toString().includes(today.getFullYear() +'-0'+ parseInt(thisMonth+1) +'-'+ today.getDate());
+				return fixture.date.toString().includes(today.toISOString().substr(0, 10));
 			});
 			if (this.todayMatches.length == 0) {
 				this.hasError = true;
@@ -247,11 +248,7 @@ var app = new Vue({
 				this.noMatchToday = true;
 			}
 			this.yesterdayResults = _.filter(this.allData.data.fixtures, function(fixture) {
-				if (today.getDate === 1) {
-					return fixture.date.toString().includes(today.getFullYear() +'-'+ today.getMonth() +'-'+ '30');
-				} else {
-					return fixture.date.toString().includes(today.getFullYear() +'-0'+ parseInt(thisMonth+1) +'-'+ parseInt(today.getDate()-1));
-				}
+				return fixture.date.toString().includes(yesterday.toISOString().substr(0, 10));
 			});
 		},
 		getWinningTeam: function(match) {
@@ -385,17 +382,11 @@ var app = new Vue({
 					winner = {};
 				});
 				
-				var today = new Date();
-				var thisMonth = parseInt(today.getMonth());
-				var todayDate = today.getFullYear() +"-0"+ parseInt(thisMonth+1) + "-" + today.getDate();
-				
-				var yesterdayDate = null;
-				if (this.todayDate === 1) {
-					yesterdayDate = today.getFullYear() +'-'+ today.getMonth() +'-'+ '30';
-				} else {
-					yesterdayDate = today.getFullYear() +'-0'+ parseInt(thisMonth+1) +'-'+ parseInt(today.getDate()-1);
-				}
-				var yesterdayPredictions = _.filter(this.fbpredictions, function (prediction){ return prediction.date.includes(yesterdayDate) });
+				//Set Yesterday Date
+				var yesterday = new Date();
+				yesterday.setDate(yesterday.getDate() - 1);
+								
+				var yesterdayPredictions = _.filter(this.fbpredictions, function (prediction){ return prediction.date.includes(yesterday.toISOString().substr(0,10)) });
 
 				_.each(yesterdayWinners, function (winner) {
 					//Filter current match
