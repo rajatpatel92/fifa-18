@@ -347,6 +347,7 @@ var app = new Vue({
 					});
 					this.message = "Saved Successfully..!!";
 					this.savedOnce = true;
+					this.hasError = true; //Toggle hasError to disable Save button after saved once
 				}
 
 			} else {
