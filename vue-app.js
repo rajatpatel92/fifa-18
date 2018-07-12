@@ -139,14 +139,15 @@ var app = new Vue({
 		loading: true,
 		predictions: [],
 		prediction: {},
-		pointsMultiplier: 2,
+		pointsMultiplier: 5,
 		message: '',
 		showRefresh: false,
 		pointsUpdatedOnce: false,
 		updatePointsInDB: false,
 		savedOnce: false,
 		hasError: false,
-		noMatchToday: false
+		noMatchToday: false,
+		isDeductionEnabled: true
 	},
 	firebase: {
 		players: playersRef,
@@ -419,6 +420,16 @@ var app = new Vue({
 								player.points += pointsToWinner;
 							}
 						});
+						//Reduce points of losing players in special matches
+						if (app.isDeductionEnabled == true) {
+							var pointsToDeduct = winningPlayers.length * app.pointsMultiplier;
+							_.each(players, function (player) {
+								//Detect and deduct points if player is losing player
+								if (!_.contains(winningPlayers, player.userCode)) {
+									player.points -= pointsToDeduct;
+								}
+							});
+						}
 						//console.log("After points addition")
 						//console.log(players);
 					}
